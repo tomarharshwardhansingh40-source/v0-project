@@ -11,7 +11,7 @@ async function request<T>(path: string, options: RequestOptions = {}): Promise<T
   })
   if (!response.ok) {
     const detail = await response.json().catch(() => ({}))
-    throw new Error(detail.message ?? 'The SkillPath API is unavailable. Please try again.')
+    throw new Error(detail.error ?? detail.message ?? 'The SkillPath API is unavailable. Please try again.')
   }
   return response.status === 204 ? (undefined as T) : response.json()
 }
@@ -23,6 +23,7 @@ export const api = {
   me: () => request('/api/auth/me'),
   createAnalysis: (body: unknown) => request('/api/analyses', { method: 'POST', body }),
   history: () => request('/api/analyses'),
+  getAnalysis: (id: string) => request(`/api/analyses/${id}`),
   deleteAnalysis: (id: string) => request(`/api/analyses/${id}`, { method: 'DELETE' }),
 }
 
